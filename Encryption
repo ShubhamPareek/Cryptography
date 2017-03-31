@@ -1,0 +1,90 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+
+string encrypt(string input)
+{
+	int length = input.length();
+	int row = floor(sqrt(length))+1;
+	bool over=false;
+	char mat[row][row];
+	string encrypted="";
+	srand(unsigned(time(0)));
+	char ch[]={'!','@','#','$','%','^','*','&','(',')','~','_','-','|','/','.','?'};  // 16
+	
+	for(int i=0;i<row;i++){
+		for(int j=0;j<row;j++){
+			
+			if(input[(row*i)+j]=='\0')
+			over=true;
+			
+			if(!over)
+			mat[i][j]=input[(row*i)+j];
+			else
+			mat[i][j]='.';	
+		}
+	}
+	
+	for(int i=0;i<row;i++){
+		for(int j=0;j<row;j++){
+			if(mat[j][i]!='.')
+			mat[j][i]=(char)(97+(int(mat[j][i])+i+j-97)%26);
+			else
+			mat[j][i] = ch[rand()%17];
+		}
+	}
+	
+	for(int i=0;i<row;i++){
+		for(int j=0;j<row;j++){
+			encrypted+=mat[j][i];
+		}
+	}
+	
+	return encrypted;
+}
+
+string decrypt(string input){
+	int length = input.length();
+	int row = sqrt(length);
+	char mat[row][row];
+	string decrypted="";
+	bool over=false;
+	for(int i=0;i<row;i++){
+		for(int j=0;j<row;j++){
+			
+			if(input[(row*i)+j]=='\0')
+			over=true;
+			
+			if(!over)
+			mat[j][i]=input[(row*i)+j];
+			else
+			mat[j][i]='.';	
+		}
+	}
+	
+	for(int i=0;i<row;i++){
+		for(int j=0;j<row;j++){
+			if(mat[j][i]>=97 && mat[j][i]<=122)
+				mat[j][i] = (char)(((mat[j][i] - (i+j) - 'a' + 26) % 26) + 'a');
+			else
+			mat[j][i]=' ';
+		}
+	}
+	
+	for(int i=0;i<row;i++){
+		for(int j=0;j<row;j++){
+			if(mat[i][j]!='.')
+			decrypted+=mat[i][j];
+			else
+			continue;
+		}
+	}
+	
+	return decrypted;
+}
+
+int main(){
+	
+		cout<<encrypt("abcdefgh")<<" ";
+		cout<<decrypt(encrypt("abcdefgh"));
+}
